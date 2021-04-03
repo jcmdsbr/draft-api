@@ -1,9 +1,12 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Entities;
 
 namespace Core.Contracts
 {
     public interface ICustomerRepository : IRepositoryBase<Customer>
     {
-        Customer GetByDocument(string document);
+        Task<Customer> GetByDocumentAsync(string document, CancellationToken cancellationToken);
+        Task CommitAsync(CancellationToken cancellationToken);
     }
 }

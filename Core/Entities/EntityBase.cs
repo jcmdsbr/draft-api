@@ -5,13 +5,13 @@ namespace Core.Entities
 {
     public abstract class EntityBase : IEntityBase
     {
-        public int Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-
-        protected EntityBase(int id)
+        protected EntityBase()
         {
-            Id = id;
-            CreatedAt =  DateTime.Now;
+            Id = Guid.NewGuid();
+            CreatedAt = DateTime.Now;
         }
+
+        public Guid Id { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

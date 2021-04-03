@@ -4,6 +4,5 @@ namespace Core.Contracts
 {
     public interface IProductRepository : IRepositoryBase<Product>
     {
-        
     }
 }

@@ -2,11 +2,11 @@ namespace Core.Entities
 {
     public class Product : EntityBase
     {
-        public string BarCode { get; set; }
-
-        public Product(int id, string barCode) : base(id)
+        public Product(string barCode)
         {
             BarCode = barCode;
         }
+
+        public string BarCode { get; set; }
     }
 }
