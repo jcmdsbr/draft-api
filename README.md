@@ -1,6 +1,6 @@
 # The Repository Pattern :sunglasses:
 
-Demo for repository pattern and two databases SQL/NOSQL
+Sample from repository pattern and two databases SQL/NOSQL
 
 ## Give a Star! :star:
 
