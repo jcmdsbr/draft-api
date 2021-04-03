@@ -11,7 +11,7 @@ If you liked the project, please give a star ;)
 - Visual Studio 2019, Visual Studio Code or Rider
 - .Net Core 5.X +
 
-## Description  :exclamation:
+## Description  :books:
 
 - A system with a complex domain model often benefits from a layer, such as the one provided by Data Mapper (165), that isolates domain objects from details of the database access code. In such systems it can be worthwhile to build another layer of abstraction over the mapping layer where query construction code is concentrated.
 This becomes more important when there are a large number of domain classes or heavy querying.
