@@ -1,43 +1,65 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infra.SQL.Repositories
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository : ICustomerRepository, IAsyncDisposable
     {
+        private readonly CustomContext _context;
+        private readonly DbSet<Customer> _customers;
 
-        // TODO implementar métodos do EF core / DbContext
-
-
-        public void Add(Customer entity)
+        public CustomerRepository(CustomContext context)
         {
-            throw new System.NotImplementedException();
+            _context = context;
+            _customers = context.Customers;
         }
 
-        public void Update(Customer entity)
+        public ValueTask DisposeAsync()
         {
-            throw new System.NotImplementedException();
+            return _context.DisposeAsync();
         }
 
-        public void Remove(int entityId)
+        public async Task AddAsync(Customer obj, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await _customers.AddAsync(obj, cancellationToken);
         }
 
-        public Customer GetById(int entityId)
+        public async Task<List<Customer>> FindAsync(CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await _customers.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public List<Customer> FindAll()
+        public Task UpdateAsync(Customer obj, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            _customers.Update(obj);
+            return Task.CompletedTask;
         }
 
-        public Customer GetByDocument(string document)
+        public async Task<Customer> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await _customers.FindAsync(new object[] {id}, cancellationToken);
+        }
+
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var customer = await GetByIdAsync(id, cancellationToken);
+            _customers.Remove(customer);
+            await Task.CompletedTask;
+        }
+
+        public async Task<Customer> GetByDocumentAsync(string document, CancellationToken cancellationToken)
+        {
+            return await _customers.SingleOrDefaultAsync(x => x.Document.Equals(document), cancellationToken);
+        }
+
+        public async Task CommitAsync(CancellationToken cancellationToken)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -4,23 +4,22 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infra.SQL.Mappings
 {
-    public class CustomerMap : IEntityTypeConfiguration<Product>
+    public class CustomerMap : IEntityTypeConfiguration<Customer>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.ToTable(nameof(Product), "dbo");
+            builder.ToTable(nameof(Customer), "dbo");
 
             builder.HasKey(x => x.Id);
-            
-            builder.Property(x => x.BarCode)
-                .HasColumnType("varchar(12)")
-                .IsRequired()
-                .HasMaxLength(12);
 
             builder.Property(x => x.CreatedAt)
                 .HasColumnType("datetime")
                 .IsRequired();
 
+            builder.Property(x => x.Document)
+                .IsRequired()
+                .HasMaxLength(14)
+                .HasColumnType("varchar(14)");
         }
     }
 }

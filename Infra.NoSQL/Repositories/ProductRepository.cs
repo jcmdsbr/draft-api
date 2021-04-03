@@ -1,37 +1,46 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Contracts;
 using Core.Entities;
+using MongoDB.Driver;
 
 namespace Infra.NoSQL.Repositories
 {
-    public class ProductRepository :  IProductRepository
+    public class ProductRepository : IProductRepository
     {
-        //TODO implementar crud no mongodb
+        private readonly IMongoCollection<Product> _collection;
 
-
-        public void Add(Product entity)
+        public ProductRepository(IMongoCollection<Product> collection)
         {
-            throw new System.NotImplementedException();
+            _collection = collection;
         }
 
-        public void Update(Product entity)
+        public async Task AddAsync(Product obj, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await _collection.InsertOneAsync(obj, cancellationToken: cancellationToken);
         }
 
-        public void Remove(int entityId)
+        public async Task<List<Product>> FindAsync(CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await _collection.Find(_ => true).ToListAsync(cancellationToken);
         }
 
-        public Product GetById(int entityId)
+        public async Task UpdateAsync(Product obj, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            await _collection.ReplaceOneAsync(x => x.Id == obj.Id, obj, cancellationToken: cancellationToken);
         }
 
-        public List<Product> FindAll()
+        public async Task<Product> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return await _collection.Find(Builders<Product>.Filter.Eq(x => x.Id, id))
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            await _collection.DeleteOneAsync(x => x.Id == id, cancellationToken);
         }
     }
 }
